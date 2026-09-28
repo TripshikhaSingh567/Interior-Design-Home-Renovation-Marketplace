@@ -26,7 +26,9 @@ public class AuthService {
     @Transactional
     public User register(RegisterRequest request) {
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        String email = request.getEmail().trim().toLowerCase();
+
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email is already registered");
         }
 
@@ -51,7 +53,7 @@ public class AuthService {
 
         User user = new User();
 
-        user.setEmail(request.getEmail().trim().toLowerCase());
+        user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(firstName);
         user.setLastName(lastName);
