@@ -8,6 +8,8 @@ import com.interiormarketplace.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.interiormarketplace.common.exception.EmailAlreadyRegisteredException;
+import com.interiormarketplace.common.exception.PasswordMismatchException;
 
 @Service
 public class AuthService {
@@ -29,11 +31,11 @@ public class AuthService {
         String email = request.getEmail().trim().toLowerCase();
 
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email is already registered");
+            throw new EmailAlreadyRegisteredException("Email is already registered");
         }
 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new PasswordMismatchException("Passwords do not match");
         }
 
         String fullName = request.getName().trim();
